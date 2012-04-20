@@ -1,6 +1,5 @@
 express = require 'express'
 routes = require './routes'
-http = require 'http'
 
 app = express()
 
