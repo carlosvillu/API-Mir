@@ -1,2 +1,4 @@
-exports.index = (req, res) ->
-  res.render('index', { title: 'Express' })
+exam = require './exam'
+
+module.exports = (app) ->
+  exam app

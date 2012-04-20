@@ -1,5 +1,4 @@
 express = require 'express'
-routes = require './routes'
 
 app = express()
 
@@ -16,6 +15,8 @@ app.configure ->
 app.configure 'development', ->
   app.use(express.errorHandler())
 
-app.get '/', routes.index
+require('./routes')(app)
+
+#app.get '/', routes.index
 
 module.exports = app
