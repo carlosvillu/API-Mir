@@ -13,4 +13,5 @@ results
 
 node_modules
 npm-debug.logconfig/
-config/*.json
+config/development.json
+config/test.json
