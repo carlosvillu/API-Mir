@@ -34,6 +34,6 @@ task 'start', 'start server', (options) ->
 
   runCommand 'nodemon', ['server.js']
 
-task 'test', 'Run all tests', ->
-   runCommand './node_modules/mocha/bin/mocha', '-c'
-   runCommand './node_modules/mocha/bin/mocha', '-c', "test/resources/#{resource}.coffee" for resource in resources
+task 'test', 'Run all tests', (options) ->
+  process.env['NODE_ENV'] = options.env or 'test'
+  runCommand './node_modules/mocha/bin/mocha', ['--compilers', 'coffee:coffee-script']

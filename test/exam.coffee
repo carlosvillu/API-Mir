@@ -2,8 +2,6 @@ app = require './../app'
 fixtures =
   exam: require './fixtures/exam'
 
-#console.log fixtures.exam
-
 describe 'Model Exam', ->
   it 'should be a exam model'
 
