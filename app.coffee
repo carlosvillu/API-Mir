@@ -1,10 +1,9 @@
-fs = require 'fs'
 express = require 'express'
 
 app = express()
 
 app.configure ->
-  app.set 'config', JSON.parse(fs.readFileSync("#{__dirname}/config/#{process.env.NODE_ENV}.json"))
+  app.set 'config', require "./config/#{process.env.NODE_ENV}.json"
   app.set 'views', "#{__dirname}/views"
   app.set 'view engine', 'jade'
   app.use(express.favicon())
@@ -19,6 +18,7 @@ app.configure 'development', ->
   app.use(express.errorHandler())
 
 require('./bootstrap')(app)
+require('./models')(app)
 require('./routes')(app)
 
 module.exports = app

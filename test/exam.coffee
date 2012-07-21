@@ -1,9 +1,11 @@
 app = require './../app'
+request = require './helpers/http'
+
 fixtures =
   exam: require './fixtures/exam'
 
 describe 'Model Exam', ->
-  it 'should be a exam model'
+  it 'should be a exam model', ->
 
   describe 'Exam#create', ->
     it 'should be possible create a new exam'

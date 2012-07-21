@@ -1,3 +1,9 @@
-exports.exam = require './exam'
-exports.question = require './question'
-exports.answer = require './answer'
+module.exports = (app) ->
+  db = app.get 'db'
+  Schema = db.Schema
+
+  Exam = new Schema
+    id: Schema.ObjectId
+    date: String
+
+  db.model 'Exam', Exam
