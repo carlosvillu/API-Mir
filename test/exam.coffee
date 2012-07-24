@@ -1,10 +1,11 @@
 app = require '../app'
 request = require './helpers/http'
-exam = null
+should = require 'should'
+Exam = null
 
 # Bootstraping must be finished
 process.nextTick ->
-  exam = require '../models/exam'
+  Exam = require '../models/exam'
 
 fixtures =
   exam: require './fixtures/exam'
@@ -12,6 +13,7 @@ fixtures =
 
 describe 'Model Exam', ->
   it 'should be a exam model', ->
+    should.exist Exam
 
   describe 'Exam#create', ->
     it 'should be possible create a new exam'
