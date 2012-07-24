@@ -8,4 +8,3 @@ readdir routesDir, (err, files) ->
     do(file) ->
       console.log "Init  Route #{file.split('.')[0]}..."
       require("#{routesDir}/#{file}")(app)
-

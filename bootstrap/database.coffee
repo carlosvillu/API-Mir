@@ -7,4 +7,5 @@ conn.on 'open', -> console.log "Data Base connecting in mongodb://#{configDB.hos
 conn.on 'error', ->
   throw new Error 'DB connect error'
 
-module.exports = db
+exports.conn = conn
+exports.db = db

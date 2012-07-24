@@ -15,14 +15,18 @@ describe 'Model Exam', ->
   it 'should be a exam model', ->
     should.exist Exam
 
-  describe 'Exam#create', ->
-    it 'should be possible create a new exam'
+  before (done) ->
+    Exam.remove {}, =>
+      @exam = new Exam()
+      done()
+  describe 'Exam CRUD', ->
+    it 'should be possible create a new exam', (done) ->
+      @exam.date = +new Date()
+      @exam.save (err) ->
+        Exam.count {}, (err, count) ->
+          count.should.be.eql 1
+          done(err)
 
-  describe 'Exam#update', ->
     it 'should be posible update an exam'
-
-  describe 'Exam#read', ->
     it 'should be possible read an exam'
-
-  describe 'Exam#delete', ->
     it 'should be possible delete an exam'

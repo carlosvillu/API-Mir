@@ -1,4 +1,4 @@
-db = require('../bootstrap').basedata
+{ db, conn } = require('../bootstrap/database')
 
 Schema = db.Schema
 
@@ -6,4 +6,4 @@ Exam = new Schema
   id: Schema.ObjectId
   date: String
 
-module.exports = db.model 'Exam', Exam
+module.exports = conn.model 'Exam', Exam
