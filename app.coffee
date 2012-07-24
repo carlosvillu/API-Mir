@@ -17,8 +17,6 @@ app.configure ->
 app.configure 'development', ->
   app.use(express.errorHandler())
 
-require('./bootstrap')(app)
-require('./models')(app)
-require('./routes')(app)
+require('./bootstrap')
 
 module.exports = app

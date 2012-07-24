@@ -1,8 +1,14 @@
-app = require './../app'
+app = require '../app'
 request = require './helpers/http'
+exam = null
+
+# Bootstraping must be finished
+process.nextTick ->
+  exam = require '../models/exam'
 
 fixtures =
   exam: require './fixtures/exam'
+
 
 describe 'Model Exam', ->
   it 'should be a exam model', ->

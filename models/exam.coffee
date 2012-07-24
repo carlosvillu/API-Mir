@@ -1,9 +1,9 @@
-module.exports = (app) ->
-  db = app.get 'db'
-  Schema = db.Schema
+db = require('../bootstrap').basedata
 
-  Exam = new Schema
-    id: Schema.ObjectId
-    date: String
+Schema = db.Schema
 
-  db.model 'Exam', Exam
+Exam = new Schema
+  id: Schema.ObjectId
+  date: String
+
+module.exports = db.model 'Exam', Exam
