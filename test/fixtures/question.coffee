@@ -54,3 +54,5 @@ questions = [
           ]
       }
   ]
+
+module.exports = questions[0]
