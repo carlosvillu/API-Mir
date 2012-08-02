@@ -7,4 +7,5 @@ Question = new Schema
   id: Schema.ObjectId
   answers: Schema.Types.Mixed
 
-module.exports = conn.model 'Question', Question
+exports.Model = conn.model 'Question', Question
+exports.Schema = Question
