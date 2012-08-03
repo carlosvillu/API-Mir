@@ -13,4 +13,5 @@ module.exports = (app) ->
     exam = new Exam type:"#{TYPE}", date: req.body.date, last_modified: Date.now()
     exam.save (err, doc, count) ->
       doc.set 'questions', "https://#{req.headers.host}/v#{app.get 'api version'}/#{TYPE}/#{req.body.date}/questions"
+      res.header 'Location', "https://#{req.headers.host}/v#{app.get 'api version'}/#{TYPE}/#{req.body.date}"
       res.json(201, doc.toJSON())

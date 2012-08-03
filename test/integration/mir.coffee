@@ -35,6 +35,7 @@ describe "Resource Exam", ->
         res.body.should.have.property('_id')
         res.body.should.have.property('date').and.be.eql 2008
         res.body.should.have.property('type').and.be.eql "#{TYPE}"
+        res.headers.should.have.property('location').and.be.match /\/v1\/mir\/2008/
         res.body.should.have.property('questions').and.match /\/v1\/mir\/2008\/questions/
         done(err)
 
