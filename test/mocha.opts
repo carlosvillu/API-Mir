@@ -1,2 +1,4 @@
 --reporter spec
 --ui bdd
+--timeout 5500
+--slow 2000
