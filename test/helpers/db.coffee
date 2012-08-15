@@ -27,3 +27,15 @@ exports.insertExam = (exam, cb) ->
     ,(collection, cb) ->
       collection.insert exam, cb
   ], (err, result) -> client.close(); cb(err)
+
+exports.insertDocumentInCollection = (doc, collection, cb) ->
+  client = null
+  async.waterfall [
+    (cb) ->
+      client = db = new Db(configDB.database, new Server(configDB.host, configDB.port, {}), {native_parser:true})
+      db.open cb
+    ,(db, cb) ->
+      db.collection collection, cb
+    ,(collection, cb) ->
+      collection.insert doc, cb
+  ], (err, result) -> client.close(); cb(err, result[0]._id)

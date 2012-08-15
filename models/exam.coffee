@@ -1,4 +1,5 @@
 { db, conn } = require('../bootstrap/database')
+QuestionSchema = require('./question').Schema
 
 Schema = db.Schema
 
@@ -7,6 +8,7 @@ Exam = new Schema
   id: Schema.ObjectId
   date: Number
   type: {type: String, index: true, required: true}
+  #questions: [ QuestionSchema ]
   last_modified: type: Date, default: Date.now
 , strict: true
 

@@ -1,4 +1,5 @@
 Exam = require('../models/exam').Model
+Question = require('../models/question').Model
 TYPE = 'mir'
 
 module.exports = (app) ->
@@ -31,6 +32,25 @@ module.exports = (app) ->
         res.header 'Location', "https://#{req.headers.host}/v#{app.get 'api version'}/#{TYPE}/#{req.body.date}"
         res.json doc
 
-  app.del '/v1/mir/:date', (req, res)->
-    Exam.remove date: req.params.date, (err, count)->
+  app.del '/v1/mir/:date', (req, res) ->
+    Exam.remove date: req.params.date, (err, count) ->
       res.json(204, null)
+
+  app.get '/v1/mir/:date/questions', (req, res) ->
+    Exam.findOne date: req.params.date, (err, doc) ->
+      if err
+        res.json 404, {error: 'Exam not found'}
+      else
+        Question.find id_exam: doc._id, (err, docs) ->
+          res.json 200, docs
+
+  app.get '/v1/mir/:date/questions/:id', (req, res) ->
+    Exam.findOne date: req.params.date, (err, doc) ->
+      if err
+        res.json 404, {error: "Exam not found"}
+      else
+        Question.findOne _id: req.params.id, (err, doc) ->
+          if err
+            res.json 404, {error: "Question not found"}
+          else
+            res.json 200, doc

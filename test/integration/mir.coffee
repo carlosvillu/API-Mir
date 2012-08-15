@@ -1,8 +1,8 @@
 app = require '../../app'
-should = require 'should'
+mhould = require 'should'
 request = require 'supertest'
 async = require 'async'
-{ cleanDB, insertExam } = require('../helpers/db')
+{ cleanDB, insertExam, insertDocumentInCollection } = require('../helpers/db')
 TYPE = "mir"
 
 
@@ -82,5 +82,65 @@ describe "Resource Exam", ->
       results.get.statusCode.should.be.eql 404
       done err
 
+describe "Resource Question", ->
+
+  beforeEach (done) ->
+    cleanDB done
+    # InsertExam in the DB to will be able add new Questions
+
+  it "GET /v1/:type/:date/questions", (done) ->
+    id_exam_created = null
+    async.series
+      prepare: (cb) ->
+        async.waterfall [
+          (callback) ->
+            insertDocumentInCollection date: 2011, type: "#{TYPE}", 'exams', callback
+          ,(id_exam, callback) ->
+            id_exam_created = id_exam
+            insertDocumentInCollection
+              id_exam: id_exam,
+              text: 'Question One',
+              answers: [{text: 'Answer One', correct: true},{text: 'Answer Two', correct: true}],
+              'questions',
+              callback
+        ], cb
+      get: (cb) ->
+        request(app)
+          .get("/v#{app.get 'api version'}/#{TYPE}/2011/questions")
+          .end(cb)
+      , (err, results) ->
+          results.get.statusCode.should.be.eql 200
+          results.get.body.should.be.an.instanceof Array
+          results.get.body[0].should.have.property('id_exam').and.be.eql String(id_exam_created)
+          done err
 
 
+  it "GET /v1/:type/:date/questions/:id", (done) ->
+    id_exam_created = null
+    async.waterfall [
+      (cb) ->
+        insertDocumentInCollection date: 2011, type: "#{TYPE}", 'exams', cb
+      , (id_exam, cb) ->
+          id_exam_created = id_exam
+          insertDocumentInCollection
+            id_exam: id_exam,
+            text: 'Question One',
+            answers: [{text: 'Answer One', correct: true},{text: 'Answer Two', correct: true}],
+            'questions',
+            cb
+      , (id_question, cb) ->
+          request(app)
+          .get("/v#{app.get 'api version'}/#{TYPE}/2011/questions/#{id_question}")
+          .end(cb)
+    ], (err, result) ->
+      result.statusCode.should.be.eql 200
+      result.body.should.be.an.instanceof Object
+      result.body.should.have.property('id_exam').and.be.eql String(id_exam_created)
+      result.body.should.have.property('answers').and.be.an.instanceof Array
+      result.body.answers[0].should.be.an.instanceof(Object).and.have.property('text').and.be.eql 'Answer One'
+      result.body.answers[0].should.be.an.instanceof(Object).and.have.property('correct').and.be.eql true
+      done err
+
+  it "POST /v1/:type/:date/questions"
+  it "PUT /v1/:type/:date/questions/:id"
+  it "DELETE /v1/:type/:date/questions/:id"
