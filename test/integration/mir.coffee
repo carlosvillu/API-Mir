@@ -141,6 +141,47 @@ describe "Resource Question", ->
       result.body.answers[0].should.be.an.instanceof(Object).and.have.property('correct').and.be.eql true
       done err
 
-  it "POST /v1/:type/:date/questions"
+  it "POST /v1/:type/:date/questions", (done) ->
+    id_exam_created = null
+    async.waterfall [
+      (cb) ->
+        insertDocumentInCollection date: 2011, type: "#{TYPE}", 'exams', cb
+      , (id_exam, cb) ->
+          id_exam_created = id_exam
+          request(app)
+            .post("/v#{app.get 'api version'}/#{TYPE}/2011/questions")
+            .send(text: "Question One", answers: [{text: 'Answer One', correct: true},{text: 'Answer Two', correct: false}])
+            .end cb
+    ], (err, result) ->
+      result.statusCode.should.be.eql 201
+      result.headers.should.have.property('location').and.be.match /\/v1\/mir\/2011\/questions\/[a-z0-9]+/
+      result.body.should.have.property('id_exam').and.be.eql String(id_exam_created)
+      result.body.should.have.property('text').and.be.eql 'Question One'
+      result.body.should.have.property('answers').and.be.an.instanceof Array
+      result.body.answers[0].should.be.an.instanceof(Object).and.have.property('text').and.be.eql 'Answer One'
+      result.body.answers[0].should.be.an.instanceof(Object).and.have.property('correct').and.be.eql true
+      result.body.answers[1].should.be.an.instanceof(Object).and.have.property('text').and.be.eql 'Answer Two'
+      result.body.answers[1].should.be.an.instanceof(Object).and.have.property('correct').and.be.eql false
+      done err
+
   it "PUT /v1/:type/:date/questions/:id"
-  it "DELETE /v1/:type/:date/questions/:id"
+  it "DELETE /v1/:type/:date/questions/:id", (done) ->
+    id_exam_created = null
+    async.waterfall [
+      (cb) ->
+        insertDocumentInCollection date: 2011, type: "#{TYPE}", 'exams', cb
+      , (id_exam, cb) ->
+          id_exam_created = id_exam
+          insertDocumentInCollection
+            id_exam: id_exam,
+            text: 'Question One',
+            answers: [{text: 'Answer One', correct: true},{text: 'Answer Two', correct: true}],
+            'questions',
+            cb
+      , (id_question, cb) ->
+          request(app)
+            .del("/v#{app.get 'api version'}/#{TYPE}/2011/questions/#{id_question}")
+            .end(cb)
+    ], (err, result) ->
+      result.statusCode.should.be.eql 204
+      done err

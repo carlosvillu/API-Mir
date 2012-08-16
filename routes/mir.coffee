@@ -54,3 +54,26 @@ module.exports = (app) ->
             res.json 404, {error: "Question not found"}
           else
             res.json 200, doc
+
+  app.post '/v1/mir/:date/questions', (req, res) ->
+    Exam.findOne date: req.params.date, (err, exam) ->
+      if err
+        res.json 404, {error: "Exam not found"}
+      else
+        question = new Question
+                        id_exam: exam._id
+                        text: req.body.text
+                        answers: req.body.answers
+                        last_modified: Date.now()
+        question.set 'image', req.body.image unless req.body.image?
+        question.save (err, qst, count) ->
+          res.header 'Location', "https://#{req.headers.host}/v#{app.get 'api version'}/#{TYPE}/#{req.params.date}/questions/#{qst._id}"
+          res.json 201, qst
+
+  app.del '/v1/mir/:date/questions/:id', (req, res) ->
+    Exam.findOne date: req.params.date, (err, exam) ->
+      if err
+        res.json 404, {error: "Exam not found"}
+      else
+        Question.remove _id: req.params.id, (err, count) ->
+          if count > 0 then res.json 204, {} else res.json 404, {error: "Question not found"}
