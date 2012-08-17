@@ -38,7 +38,7 @@ module.exports = (app) ->
 
   app.get '/v1/mir/:date/questions', (req, res) ->
     Exam.findOne date: req.params.date, (err, doc) ->
-      if err
+      if not doc
         res.json 404, {error: 'Exam not found'}
       else
         Question.find id_exam: doc._id, (err, docs) ->
@@ -46,7 +46,7 @@ module.exports = (app) ->
 
   app.get '/v1/mir/:date/questions/:id', (req, res) ->
     Exam.findOne date: req.params.date, (err, doc) ->
-      if err
+      if not doc
         res.json 404, {error: "Exam not found"}
       else
         Question.findOne _id: req.params.id, (err, doc) ->
@@ -57,7 +57,7 @@ module.exports = (app) ->
 
   app.post '/v1/mir/:date/questions', (req, res) ->
     Exam.findOne date: req.params.date, (err, exam) ->
-      if err
+      if not exam
         res.json 404, {error: "Exam not found"}
       else
         question = new Question
@@ -72,7 +72,7 @@ module.exports = (app) ->
 
   app.del '/v1/mir/:date/questions/:id', (req, res) ->
     Exam.findOne date: req.params.date, (err, exam) ->
-      if err
+      if not exam
         res.json 404, {error: "Exam not found"}
       else
         Question.remove _id: req.params.id, (err, count) ->

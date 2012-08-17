@@ -10,6 +10,7 @@ app.configure ->
   app.use(express.bodyParser())
   app.use(express.methodOverride())
   app.use(app.router)
+  app.use( (req, res) -> res.json 400, {error: "Bad Request"} )
 
 
 app.configure 'development', ->
