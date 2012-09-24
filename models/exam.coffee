@@ -10,7 +10,6 @@ Exam = new Schema
   type: {type: String, index: true, required: true}
   #questions: [ QuestionSchema ]
   last_modified: type: Date, default: Date.now
-, strict: true
 
 ###
   TODO:
